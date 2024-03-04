@@ -7,8 +7,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../constants/colors.dart';
-import '../../../utils/Widgets/text and textforms/Reusable_text.dart';
+import '../../../../constants/colors.dart';
+import '../../../../utils/Widgets/text and textforms/Reusable_text.dart';
 
 class Delivery_Screen extends StatefulWidget {
   static const route = '/delivery';

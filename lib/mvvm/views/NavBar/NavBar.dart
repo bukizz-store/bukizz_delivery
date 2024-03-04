@@ -1,6 +1,11 @@
 
+import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/Delivery_screen.dart';
+import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/QRCode/qr_code.dart';
+import 'package:bukizz_delivery/mvvm/views/profile/newProfile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../constants/colors.dart';
@@ -34,16 +39,16 @@ class _MainScreenState extends State<MainScreen> {
           bottomNavigationBar: BottomNavigationBar(
             items:<BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(AppImage.homeIcon,color: context.watch<BottomNavigationBarProvider>().selectedIndex == 0 ? AppColors.productButtonSelectedBorder : AppColors.schoolTextColor,),
-                label: 'Home',
+                icon: Icon(Icons.qr_code_scanner),
+                label: 'Scan Orders',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(AppImage.cartIcon, color: context.watch<BottomNavigationBarProvider>().selectedIndex == 1 ? AppColors.productButtonSelectedBorder : AppColors.schoolTextColor,),
-                label: 'Orders',
+                icon: Icon(Icons.delivery_dining),
+                label: 'Delivery',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(AppImage.notificationIcon,color: context.watch<BottomNavigationBarProvider>().selectedIndex == 2 ? AppColors.productButtonSelectedBorder : AppColors.schoolTextColor,),
-                label: 'Notification',
+                icon: Icon(Icons.person),
+                label: 'Profile',
 
               ),
 
@@ -65,11 +70,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildCurrentScreen() {
     switch (context.watch<BottomNavigationBarProvider>().selectedIndex) {
       case 0:
-        return Container();
+        return QRCodeScanner();
       case 1:
-        return  Container();
+        return  Delivery_Screen();
       case 2:
-        return  Container();
+        return  NewProfileScreen();
       default:
         return Container();
     }

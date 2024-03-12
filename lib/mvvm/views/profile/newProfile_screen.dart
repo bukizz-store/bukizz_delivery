@@ -1,3 +1,4 @@
+import 'package:bukizz_delivery/mvvm/views/profile/user%20details/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                 SizedBox(height: dimensions.height10*5,),
                 GestureDetector(
                   onTap: (){
-                    // Navigator.pushNamed(context, AddressScreen1.route);
+                    Navigator.pushNamed(context, AddressScreen1.route);
                   },
                   child: Container(
                     height: dimensions.height10*8.5,

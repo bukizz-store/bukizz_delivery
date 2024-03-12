@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../../../providers/otp_provider.dart';
 
 class OTPDialog extends StatefulWidget {
   final Function(String) onOTPConfirmed;
@@ -28,6 +31,7 @@ class _OTPDialogState extends State<OTPDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var otp = Provider.of<OTPMismatchProvider>(context);
     return AlertDialog(
       title: Text('Enter OTP'),
       content: Form(
@@ -42,6 +46,9 @@ class _OTPDialogState extends State<OTPDialog> {
           validator: (value) {
             if (value == null || value.isEmpty || value.length != 6) {
               return 'Enter a 6-digit OTP';
+            }
+            else if(otp.otpMismatch==true){
+              return 'Wrong OTP entered';
             }
             return null;
           },
@@ -59,7 +66,7 @@ class _OTPDialogState extends State<OTPDialog> {
             if (_formKey.currentState!.validate()) {
               String otp = _otpController.text;
               widget.onOTPConfirmed(otp);
-              Navigator.of(context).pop();
+              //Navigator.of(context).pop();
             }
           },
           child: Text('Confirm'),

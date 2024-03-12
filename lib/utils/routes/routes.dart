@@ -2,6 +2,7 @@
 import 'package:bukizz_delivery/mvvm/views/NavBar/NavBar.dart';
 import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/Delivery/View_details.dart';
 import 'package:bukizz_delivery/mvvm/views/profile/contact_us.dart';
+import 'package:bukizz_delivery/mvvm/views/profile/user%20details/user_profile.dart';
 import 'package:bukizz_delivery/providers/bottom_nav_bar_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,10 @@ class RouteGenerator{
       case ViewDetailScreen.route:
         return MaterialPageRoute(
             builder: (_) => ViewDetailScreen()
+        );
+      case AddressScreen1.route:
+        return MaterialPageRoute(
+            builder: (_) => AddressScreen1()
         );
       default:
         return _errorRoute();

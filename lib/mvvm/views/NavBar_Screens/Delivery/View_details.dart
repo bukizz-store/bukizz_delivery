@@ -1,6 +1,10 @@
 import 'package:bukizz_delivery/constants/dimensions.dart';
+import 'package:bukizz_delivery/utils/Widgets/buttons/Reusable_Button.dart';
 import 'package:bukizz_delivery/utils/Widgets/spacing/spacing.dart';
+import 'package:bukizz_delivery/utils/Widgets/tick_screen/tick.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../constants/colors.dart';
@@ -16,6 +20,8 @@ class ViewDetailScreen extends StatefulWidget {
 }
 
 class _ViewDetailScreenState extends State<ViewDetailScreen> {
+  bool isTrue=false;
+  TextEditingController _otpController=TextEditingController();
   @override
   Widget build(BuildContext context) {
     Dimensions dimensions=Dimensions(context);
@@ -179,11 +185,77 @@ class _ViewDetailScreenState extends State<ViewDetailScreen> {
                           ReusableText(text: '₹ 30', fontSize: 12,fontWeight: FontWeight.w500,)
                         ],
                       ),
+
+
                     ],
                   )
                 ],
               ),
-            )
+            ),
+
+            50.verticalSpace,
+
+            Container(
+              width: 60.sp,
+              height: 20.sp,
+              child: TextFormField(
+                controller: _otpController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
+                decoration: InputDecoration(
+                  hintText: 'Enter OTP',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty || value.length != 6) {
+                    return 'Enter a 6-digit OTP';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
+            20.verticalSpace,
+
+            ReusableElevatedButton(
+                width: 65.sp,
+                height: 27.sp,
+                onPressed: (){
+                  //if otp is true
+                  setState(() {
+                    isTrue=true;
+                  });
+                },
+                buttonText: 'Validate OTP'
+            ),
+            100.verticalSpace,
+            if(isTrue)
+            SwipeButton(
+                width: 75.sp,
+                thumb: Icon(
+                  Icons.double_arrow_rounded,
+                  color: Colors.white,
+                ),
+                child: Text(
+                  "Swipe to confirm delivery",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                activeThumbColor: AppColors.buttonColor,
+                activeTrackColor: Colors.grey.shade300,
+
+                onSwipe: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Delivered"),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TickScreen(text: 'Order Delivered Sucessfully', secondaryText: 'Go to home screen to deliver more')));
+
+                },
+              )
+
           ],
 
         ),

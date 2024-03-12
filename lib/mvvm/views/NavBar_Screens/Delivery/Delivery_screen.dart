@@ -13,6 +13,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../providers/otp_provider.dart';
 import '../../../../utils/Widgets/dialog box/OtpDialogueBox.dart';
 import '../../../../utils/Widgets/text and textforms/Reusable_text.dart';
 
@@ -442,78 +443,28 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                       ],
                                     ),
                                     25.verticalSpace,
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async{
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return OTPDialog(
-                                                  onOTPConfirmed: (String otp) {
-                                                    //getting the otp from firebase database as it stores in ordersOTP -> orderId:OTP and comparing with otp entered by user
-                                                    FirebaseDatabase.instance.ref().child('ordersOTP').get().then((value) => value.children.forEach((element) async {
-                                                      if(element.key == orders.pendingOrders[index].orderId){
-                                                        if(element.value == otp){
-                                                          await orders.updateOrderStatus(
-                                                              orders.pendingOrders[index],
-                                                              'Delivered');
-                                                          //delete this otp from database
-                                                          await FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).remove();
-                                                        }
-                                                        else{
-                                                          AppConstants.showSnackBar(context, "Invalid OTP", Colors.grey, Icons.error_outline_rounded);
-                                                        }
-                                                      }
-                                                    }));
-                                                  },
-                                                );
-                                              },
-                                            );
-
-                                          },
-                                          child: Container(
-                                            width: 36.w,
-                                            height: 5.h,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.tabcolor,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Center(
-                                                child: ReusableText(
-                                              text: 'Delivered',
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                            )),
-                                          ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        orders.updateOrderStatus(
+                                            orders.pendingOrders[index],
+                                            'Redelivery');
+                                      },
+                                      child: Container(
+                                        width: 70.w,
+                                        height: 5.h,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            orders.updateOrderStatus(
-                                                orders.pendingOrders[index],
-                                                'Redelivery');
-                                          },
-                                          child: Container(
-                                            width: 36.w,
-                                            height: 5.h,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Center(
-                                                child: ReusableText(
-                                              text: 'Not Delivered',
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                          ),
-                                        ),
-                                      ],
+                                        child: Center(
+                                            child: ReusableText(
+                                          text: 'Not Delivered',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                      ),
                                     )
                                   ],
                                 ),

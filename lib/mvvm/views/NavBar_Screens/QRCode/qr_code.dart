@@ -152,7 +152,7 @@ void showCustomAboutDialog(BuildContext context  , Barcode barcode) {
                             navInit: 'Your Order is',
                             navLast: 'Out For Delivery',
                             content: 'Your product ${value.data()!['productName']} - ${value.data()!['schoolName']} is Out For Delivery having code $otp',
-                            image: value.data()!['image'][0],
+                            image: "",
                             date: DateTime.now().toIso8601String(),
                             notificationId: '1',
                             link: '/order/${barcode.code}',

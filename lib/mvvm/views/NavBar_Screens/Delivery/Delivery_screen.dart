@@ -1,8 +1,10 @@
+import 'package:bukizz_delivery/constants/constants.dart';
 import 'package:bukizz_delivery/constants/dimensions.dart';
 import 'package:bukizz_delivery/mvvm/viewModels/orders/orders.dart';
 import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/Delivery/View_details.dart';
 import 'package:bukizz_delivery/mvvm/views/profile/contact_us.dart';
 import 'package:bukizz_delivery/utils/Widgets/spacing/spacing.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -415,17 +417,22 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            // navigate(orders
-                                            //     .pendingOrders[index].address
-                                            //     .toNavigateString());
+
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return OTPDialog(
                                                   onOTPConfirmed: (String otp) {
-                                                    // Here you can handle the OTP confirmation logic
-                                                    // For example, you can send the OTP to your server for verification
-                                                    print('OTP Confirmed: $otp');
+                                                    print(FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).key);
+                                                    if(FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).key == otp)
+                                                        {
+                                                          navigate(orders
+                                                              .pendingOrders[index].address
+                                                              .toNavigateString());
+                                                        }
+                                                    else{
+                                                      AppConstants.showSnackBar(context, "Invalid OTP", Colors.grey, Icons.error_outline_rounded);
+                                                    }
                                                   },
                                                 );
                                               },

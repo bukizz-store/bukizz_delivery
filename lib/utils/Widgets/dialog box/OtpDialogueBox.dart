@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 class OTPDialog extends StatefulWidget {
   final Function(String) onOTPConfirmed;
-
   OTPDialog({required this.onOTPConfirmed});
 
   @override
@@ -11,6 +10,7 @@ class OTPDialog extends StatefulWidget {
 }
 
 class _OTPDialogState extends State<OTPDialog> {
+
   late TextEditingController _otpController;
   final _formKey = GlobalKey<FormState>();
 

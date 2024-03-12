@@ -1,5 +1,5 @@
 
-import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/Delivery_screen.dart';
+import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/Delivery/Delivery_screen.dart';
 import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/QRCode/qr_code.dart';
 import 'package:bukizz_delivery/mvvm/views/profile/newProfile_screen.dart';
 import 'package:flutter/material.dart';

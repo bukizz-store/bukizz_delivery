@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:bukizz_delivery/constants/dimensions.dart';
 import 'package:bukizz_delivery/constants/strings.dart';
+import 'package:bukizz_delivery/mvvm/viewModels/orders/orders.dart';
 import 'package:bukizz_delivery/providers/bottom_nav_bar_provider.dart';
 import 'package:bukizz_delivery/utils/Widgets/spacing/spacing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -12,6 +16,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/constants.dart';
 import '../../../../utils/Widgets/text and textforms/Reusable_text.dart';
+import '../../../models/notifications/notifications.dart';
 
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({Key? key}) : super(key: key);
@@ -133,14 +138,31 @@ void showCustomAboutDialog(BuildContext context  , Barcode barcode) {
                 ),
                 GestureDetector(
                   onTap: (){
+                    int otp = Random().nextInt(999999);
                     FirebaseFirestore.instance.collection('orderDetails').doc(barcode.code).update({
                       'status':'Out For Delivery'
                     }).then((value) {
                       FirebaseFirestore.instance.collection(AppString.collectionDelivery).doc(AppConstants.userData.id).update({
                         'pendingDelivery': FieldValue.arrayUnion([barcode.code]),
+                      }).then((value) => FirebaseDatabase.instance.ref().child('ordersOTP').child(barcode.code!).set(otp)).then((value){
+                        //get the userId from the orderId and send notification
+                        FirebaseFirestore.instance.collection('orderDetails').doc(barcode.code).get().then((value) {
+                          String userId = value.data()!['userId'];
+                          NotificationModel notificationModel = NotificationModel(
+                            navInit: 'Your Order is',
+                            navLast: 'Out For Delivery',
+                            content: 'Your product ${value.data()!['productName']} - ${value.data()!['schoolName']} is Out For Delivery having code $otp',
+                            image: value.data()!['image'][0],
+                            date: DateTime.now().toIso8601String(),
+                            notificationId: '1',
+                            link: '/order/${barcode.code}',
+                          );
+                          context.read<Orders>().sendNotification(notificationModel, userId);
+                        });
+                      }).then((value){
+                        Navigator.of(context).pop();
+                        context.read<BottomNavigationBarProvider>().setSelectedIndex(1);
                       });
-                      Navigator.of(context).pop();
-                      context.read<BottomNavigationBarProvider>().setSelectedIndex(1);
                     }).catchError((e){
                       AppConstants.showSnackBar(context, e.toString(), AppColors.error, Icons.error_outline_rounded);
                     });

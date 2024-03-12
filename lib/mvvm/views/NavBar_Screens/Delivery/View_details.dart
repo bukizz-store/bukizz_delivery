@@ -8,6 +8,7 @@ import '../../../../utils/Widgets/text and textforms/Reusable_text.dart';
 
 
 class ViewDetailScreen extends StatefulWidget {
+  static const route = '/View Details';
   const ViewDetailScreen({super.key});
 
   @override

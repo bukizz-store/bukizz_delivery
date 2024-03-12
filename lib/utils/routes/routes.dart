@@ -1,5 +1,6 @@
 
 import 'package:bukizz_delivery/mvvm/views/NavBar/NavBar.dart';
+import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/Delivery/View_details.dart';
 import 'package:bukizz_delivery/mvvm/views/profile/contact_us.dart';
 import 'package:bukizz_delivery/providers/bottom_nav_bar_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,10 @@ class RouteGenerator{
       case ContactUsScreen.route:
         return MaterialPageRoute(
             builder: (_) => ContactUsScreen()
+        );
+      case ViewDetailScreen.route:
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailScreen()
         );
       default:
         return _errorRoute();

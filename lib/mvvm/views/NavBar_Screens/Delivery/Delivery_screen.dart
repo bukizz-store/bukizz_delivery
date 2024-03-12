@@ -1,5 +1,6 @@
 import 'package:bukizz_delivery/constants/dimensions.dart';
 import 'package:bukizz_delivery/mvvm/viewModels/orders/orders.dart';
+import 'package:bukizz_delivery/mvvm/views/NavBar_Screens/Delivery/View_details.dart';
 import 'package:bukizz_delivery/mvvm/views/profile/contact_us.dart';
 import 'package:bukizz_delivery/utils/Widgets/spacing/spacing.dart';
 import 'package:flutter/gestures.dart';
@@ -10,6 +11,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../utils/Widgets/dialog box/OtpDialogueBox.dart';
 import '../../../../utils/Widgets/text and textforms/Reusable_text.dart';
 
 class Delivery_Screen extends StatefulWidget {
@@ -317,31 +319,42 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                                     text:
                                                         'Order ID: ${orders.pendingOrders[index].orderId.split('-')[0]}',
                                                     fontSize: 14),
-                                                15.verticalSpace,
-                                                ReusableText(
-                                                  text:
-                                                      'Recipient: ${orders.pendingOrders[index].address.name}',
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w400,
+                                                5.verticalSpace,
+                                                SizedBox(
+                                                  width:52.sp,
+                                                  child: Text(
+                                                        'Recipient: ${orders.pendingOrders[index].address.name}',
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w400,
+                                                      fontFamily: 'nunito'
+                                                    ),
+                                                    //overflow: TextOverflow.ellipsis,
+                                                  ),
                                                 )
                                               ],
                                             )
                                           ],
                                         ),
-                                        Container(
-                                          width: 45.sp,
-                                          height: 26.sp,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Center(
-                                            child: ReusableText(
-                                              text: 'View Details',
-                                              fontSize: 14,
-                                              color: Colors.black,
+                                        GestureDetector(
+                                          onTap:(){
+                                            Navigator.pushNamed(context, ViewDetailScreen.route);
+                                          },
+                                          child: Container(
+                                            width: 40.sp,
+                                            height: 26.sp,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[200],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: ReusableText(
+                                                text: 'View Details',
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
                                         )
@@ -402,12 +415,25 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            navigate(orders
-                                                .pendingOrders[index].address
-                                                .toNavigateString());
+                                            // navigate(orders
+                                            //     .pendingOrders[index].address
+                                            //     .toNavigateString());
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return OTPDialog(
+                                                  onOTPConfirmed: (String otp) {
+                                                    // Here you can handle the OTP confirmation logic
+                                                    // For example, you can send the OTP to your server for verification
+                                                    print('OTP Confirmed: $otp');
+                                                  },
+                                                );
+                                              },
+                                            );
+
                                           },
                                           child: Container(
-                                            width: 45.sp,
+                                            width: 40.sp,
                                             height: 26.sp,
                                             decoration: BoxDecoration(
                                               color: Colors.grey[200],
@@ -653,3 +679,4 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
     });
   }
 }
+

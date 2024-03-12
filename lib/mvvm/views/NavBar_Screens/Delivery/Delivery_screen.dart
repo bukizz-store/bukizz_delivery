@@ -417,29 +417,8 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
+                                            navigate(orders.pendingOrders[index].address.toNavigateString());
 
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return OTPDialog(
-                                                  onOTPConfirmed: (String otp) {
-                                                    //getting the otp from firebase database as it stores in ordersOTP -> orderId:OTP and comparing with otp entered by user
-                                                    FirebaseDatabase.instance.ref().child('ordersOTP').get().then((value) => value.children.forEach((element) async {
-                                                      if(element.key == orders.pendingOrders[index].orderId){
-                                                        if(element.value == otp){
-                                                          navigate(orders.pendingOrders[index].address.toNavigateString());
-                                                          //delete this otp from database
-                                                          await FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).remove();
-                                                        }
-                                                        else{
-                                                          AppConstants.showSnackBar(context, "Invalid OTP", Colors.grey, Icons.error_outline_rounded);
-                                                        }
-                                                      }
-                                                    }));
-                                                  },
-                                                );
-                                              },
-                                            );
 
                                           },
                                           child: Container(
@@ -469,18 +448,26 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                       children: [
                                         GestureDetector(
                                           onTap: () async{
-
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return OTPDialog(
-                                                  onOTPConfirmed: (String otp) async {
-                                                    // Here you can handle the OTP confirmation logic
-                                                    // For example, you can send the OTP to your server for verification
-                                                    await orders.updateOrderStatus(
-                                                        orders.pendingOrders[index],
-                                                        'Delivered');
-                                                    print('OTP Confirmed: $otp');
+                                                  onOTPConfirmed: (String otp) {
+                                                    //getting the otp from firebase database as it stores in ordersOTP -> orderId:OTP and comparing with otp entered by user
+                                                    FirebaseDatabase.instance.ref().child('ordersOTP').get().then((value) => value.children.forEach((element) async {
+                                                      if(element.key == orders.pendingOrders[index].orderId){
+                                                        if(element.value == otp){
+                                                          await orders.updateOrderStatus(
+                                                              orders.pendingOrders[index],
+                                                              'Delivered');
+                                                          //delete this otp from database
+                                                          await FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).remove();
+                                                        }
+                                                        else{
+                                                          AppConstants.showSnackBar(context, "Invalid OTP", Colors.grey, Icons.error_outline_rounded);
+                                                        }
+                                                      }
+                                                    }));
                                                   },
                                                 );
                                               },

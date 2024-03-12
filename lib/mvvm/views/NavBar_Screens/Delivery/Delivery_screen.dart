@@ -423,16 +423,19 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                               builder: (BuildContext context) {
                                                 return OTPDialog(
                                                   onOTPConfirmed: (String otp) {
-                                                    print(FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).key);
-                                                    if(FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).key == otp)
-                                                        {
-                                                          navigate(orders
-                                                              .pendingOrders[index].address
-                                                              .toNavigateString());
+                                                    //getting the otp from firebase database as it stores in ordersOTP -> orderId:OTP and comparing with otp entered by user
+                                                    FirebaseDatabase.instance.ref().child('ordersOTP').get().then((value) => value.children.forEach((element) async {
+                                                      if(element.key == orders.pendingOrders[index].orderId){
+                                                        if(element.value == otp){
+                                                          navigate(orders.pendingOrders[index].address.toNavigateString());
+                                                          //delete this otp from database
+                                                          await FirebaseDatabase.instance.ref().child('ordersOTP').child(orders.pendingOrders[index].orderId).remove();
                                                         }
-                                                    else{
-                                                      AppConstants.showSnackBar(context, "Invalid OTP", Colors.grey, Icons.error_outline_rounded);
-                                                    }
+                                                        else{
+                                                          AppConstants.showSnackBar(context, "Invalid OTP", Colors.grey, Icons.error_outline_rounded);
+                                                        }
+                                                      }
+                                                    }));
                                                   },
                                                 );
                                               },

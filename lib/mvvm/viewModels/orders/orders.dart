@@ -83,8 +83,8 @@ class Orders extends ChangeNotifier {
   }
 
   Future<void> updateOrderStatus(OrderModel orders, String status) async {
-    try {
-      orderStatusUpdated = true;
+    // try {
+    //   orderStatusUpdated = true;
       late String productId;
       late String schoolName;
       late String set;
@@ -122,7 +122,9 @@ class Orders extends ChangeNotifier {
               image: productModel
                   .variation[productModel.set
                       .indexWhere((element) => element.name == set)
-                      .toString()]![stream.toString()]!
+                      .toString()]![stream != "" ? productModel.stream
+                  .indexWhere((element) => element.name == stream)
+                  .toString() : stream.toString()]!
                   .image[0],
               date: DateTime.now().toIso8601String(),
               notificationId: '1',
@@ -170,10 +172,10 @@ class Orders extends ChangeNotifier {
                       .update({
                     'pendingDelivery': FieldValue.arrayRemove([orderId]),
                   }));
-    } catch (e) {
-      print(e);
-    }
-    orderStatusUpdated = false;
+    // } catch (e) {
+    //   print(e);
+    // }
+    // orderStatusUpdated = false;
   }
 
   Future<void> sendNotification(

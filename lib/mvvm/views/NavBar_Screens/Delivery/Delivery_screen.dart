@@ -459,9 +459,23 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                       children: [
                                         GestureDetector(
                                           onTap: () async{
-                                            await orders.updateOrderStatus(
-                                                orders.pendingOrders[index],
-                                                'Delivered');
+
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return OTPDialog(
+                                                  onOTPConfirmed: (String otp) async {
+                                                    // Here you can handle the OTP confirmation logic
+                                                    // For example, you can send the OTP to your server for verification
+                                                    await orders.updateOrderStatus(
+                                                        orders.pendingOrders[index],
+                                                        'Delivered');
+                                                    print('OTP Confirmed: $otp');
+                                                  },
+                                                );
+                                              },
+                                            );
+
                                           },
                                           child: Container(
                                             width: 36.w,
@@ -547,7 +561,7 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                                 // border: Border.all()
                                               ),
                                             ),
-                                            15.horizontalSpace,
+                                            10.horizontalSpace,
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -555,21 +569,28 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                                 ReusableText(
                                                     text:
                                                         'Order ID: ${orders.deliveredOrders[index].orderId.split('-')[0]}',
-                                                    fontSize: 14),
-                                                15.verticalSpace,
-                                                ReusableText(
-                                                  text:
-                                                      'Recipient: ${orders.deliveredOrders[index].address.name}',
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w400,
+                                                    fontSize: 14
+                                                ),
+                                                5.verticalSpace,
+                                                SizedBox(
+                                                  width:52.sp,
+                                                  child: Text(
+                                                    'Recipient: ${orders.deliveredOrders[index].address.name}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w400,
+                                                        fontFamily: 'nunito'
+                                                    ),
+                                                    //overflow: TextOverflow.ellipsis,
+                                                  ),
                                                 )
                                               ],
                                             )
                                           ],
                                         ),
                                         Container(
-                                          width: 45.sp,
+                                          width: 40.sp,
                                           height: 26.sp,
                                           decoration: BoxDecoration(
                                             color: Colors.grey[200],
@@ -647,7 +668,7 @@ class _Delivery_ScreenState extends State<Delivery_Screen> {
                                                 .toNavigateString());
                                           },
                                           child: Container(
-                                            width: 45.sp,
+                                            width: 40.sp,
                                             height: 26.sp,
                                             decoration: BoxDecoration(
                                               color: Colors.grey[200],

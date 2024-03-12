@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OTPDialog extends StatefulWidget {
   final Function(String) onOTPConfirmed;
@@ -11,6 +12,7 @@ class OTPDialog extends StatefulWidget {
 
 class _OTPDialogState extends State<OTPDialog> {
   late TextEditingController _otpController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -28,11 +30,21 @@ class _OTPDialogState extends State<OTPDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Enter OTP'),
-      content: TextField(
-        controller: _otpController,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          hintText: 'Enter OTP',
+      content: Form(
+        key: _formKey,
+        child: TextFormField(
+          controller: _otpController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
+          decoration: InputDecoration(
+            hintText: 'Enter OTP',
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty || value.length != 6) {
+              return 'Enter a 6-digit OTP';
+            }
+            return null;
+          },
         ),
       ),
       actions: <Widget>[
@@ -44,13 +56,10 @@ class _OTPDialogState extends State<OTPDialog> {
         ),
         TextButton(
           onPressed: () {
-            String otp = _otpController.text;
-            if (otp.isNotEmpty) {
+            if (_formKey.currentState!.validate()) {
+              String otp = _otpController.text;
               widget.onOTPConfirmed(otp);
               Navigator.of(context).pop();
-            } else {
-              // Handle empty OTP input
-              // You can show an error message or perform any other action
             }
           },
           child: Text('Confirm'),

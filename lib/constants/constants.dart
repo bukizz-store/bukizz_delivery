@@ -1,12 +1,26 @@
 import 'package:bukizz_delivery/utils/Widgets/spacing/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import '../mvvm/models/userModel/userModel.dart';
 import 'colors.dart';
 
 class AppConstants {
+  static late UserModel userData;
   static String fcmToken = '';
   static bool isLogin = false;
+
+  static buildShowDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: SpinKitChasingDots(size: 24,color: AppColors.primaryColor,),
+          );
+        });
+  }
 
   static Future<void> showSnackBar(BuildContext context , String text , Color color , IconData icon , {int time = 2}) async {
     var snackBar = SnackBar(

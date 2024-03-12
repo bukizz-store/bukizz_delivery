@@ -37,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
       return Scaffold(
           body: _buildCurrentScreen(),
           bottomNavigationBar: BottomNavigationBar(
-            items:<BottomNavigationBarItem>[
+            items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.qr_code_scanner),
                 label: 'Scan Orders',
@@ -49,9 +49,7 @@ class _MainScreenState extends State<MainScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: 'Profile',
-
               ),
-
             ],
             unselectedItemColor: AppColors.schoolTextColor,
             unselectedFontSize: 10,

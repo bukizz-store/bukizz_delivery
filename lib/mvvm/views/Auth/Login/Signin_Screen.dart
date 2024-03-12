@@ -1,9 +1,13 @@
 
 import 'package:bukizz_delivery/constants/font_family.dart';
+import 'package:bukizz_delivery/mvvm/viewModels/Auth/authViewModel.dart';
 import 'package:bukizz_delivery/mvvm/views/Auth/Login/reset_password.dart';
 import 'package:bukizz_delivery/mvvm/views/NavBar/NavBar.dart';
+import 'package:bukizz_delivery/providers/bottom_nav_bar_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../constants/constants.dart';
 import '../../../../constants/dimensions.dart';
 import '../../../../utils/Widgets/buttons/Reusable_Button.dart';
 import '../../../../utils/Widgets/containers/Reusable_container.dart';
@@ -25,7 +29,17 @@ class _SignInState extends State<SignIn> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
+    Future.delayed(Duration.zero, () async {
+      if (AppConstants.isLogin) {
+        context.read<BottomNavigationBarProvider>().setSelectedIndex(1);
+        Navigator.pushNamedAndRemoveUntil(context, MainScreen.route, (route) => false);
+      }});
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -33,13 +47,10 @@ class _SignInState extends State<SignIn> {
     Dimensions dimensions = Dimensions(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        // title: Text('Sign In'),
-        backgroundColor: Color(0xFFF5FAFF),
-      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
+        alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -132,7 +143,15 @@ class _SignInState extends State<SignIn> {
                   width: dimensions.width327,
                   height: dimensions.height48,
                   onPressed: () async {
-                    Navigator.pushNamed(context, MainScreen.route);
+                    if (!RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(_emailTextController.text)) {
+                      AppConstants.showSnackBar(context, "Enter a valid Email",
+                          AppColors.error, Icons.error_outline_rounded);
+                      return;
+                    }
+                    AppConstants.buildShowDialog(context);
+                    await context.read<AuthProvider>().signInWithEmailAndPassword(_emailTextController.text, _passwordTextController.text, context);
                   },
                   buttonText: 'Login',
                   fontSize: 16,
@@ -149,9 +168,6 @@ class _SignInState extends State<SignIn> {
                 SizedBox(
                   height: dimensions.height36,
                 ),
-
-
-
               ],
             ),
           ),

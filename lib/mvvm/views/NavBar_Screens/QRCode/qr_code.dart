@@ -1,4 +1,5 @@
 import 'package:bukizz_delivery/constants/dimensions.dart';
+import 'package:bukizz_delivery/constants/strings.dart';
 import 'package:bukizz_delivery/providers/bottom_nav_bar_provider.dart';
 import 'package:bukizz_delivery/utils/Widgets/spacing/spacing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -135,6 +136,9 @@ void showCustomAboutDialog(BuildContext context  , Barcode barcode) {
                     FirebaseFirestore.instance.collection('orderDetails').doc(barcode.code).update({
                       'status':'Out For Delivery'
                     }).then((value) {
+                      FirebaseFirestore.instance.collection(AppString.collectionDelivery).doc(AppConstants.userData.id).update({
+                        'pendingDelivery': FieldValue.arrayUnion([barcode.code]),
+                      });
                       Navigator.of(context).pop();
                       context.read<BottomNavigationBarProvider>().setSelectedIndex(1);
                     }).catchError((e){

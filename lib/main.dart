@@ -1,3 +1,4 @@
+import 'package:bukizz_delivery/mvvm/models/userModel/userModel.dart';
 import 'package:bukizz_delivery/mvvm/views/Auth/Login/Signin_Screen.dart';
 import 'package:bukizz_delivery/providers/provider.dart';
 import 'package:bukizz_delivery/utils/routes/routes.dart';
@@ -11,6 +12,7 @@ import 'constants/theme.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await UserModel.loadFromSharedPreferences();
   runApp(const MyApp());
 }
 
@@ -27,8 +29,7 @@ class MyApp extends StatelessWidget {
               onGenerateRoute: RouteGenerator.generateRoute,
               theme: AppTheme.lightThemeData,
             ));
-      }
-      );
+      });
     }
   }
 

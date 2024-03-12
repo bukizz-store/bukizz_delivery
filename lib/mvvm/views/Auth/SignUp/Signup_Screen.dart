@@ -1,7 +1,10 @@
 
+import 'package:bukizz_delivery/mvvm/viewModels/Auth/authViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../constants/colors.dart';
+import '../../../../constants/constants.dart';
 import '../../../../constants/dimensions.dart';
 import '../../../../constants/font_family.dart';
 import '../../../../utils/Widgets/buttons/Reusable_Button.dart';
@@ -145,7 +148,17 @@ class _SignUpState extends State<SignUp> {
                   width: dimensions.width327,
                   height: dimensions.height48,
                   onPressed: () async {
-
+                    if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(_emailTextController.text))
+                    {
+                      AppConstants.showSnackBar(context, "Enter a valid Email", AppColors.error, Icons.error_outline_rounded);
+                      return;
+                    }
+                    AppConstants.buildShowDialog(context);
+                    String email = _emailTextController.text.trim();
+                    String password = _passwordTextController.text.trim();
+                    String name = _nameTextController.text.trim();
+                    await context.read<AuthProvider>().signUpWithEmailAndPassword(name : name, email: email, password : password , context: context);
                   },
                   buttonText: 'Register',
                   fontFamily: FontFamily.nunito.name,
